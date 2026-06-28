@@ -14,6 +14,7 @@ const CustomPieChart = ({
   totalAmount,
   colors = [],
   showTextAnchor,
+  dataKey = "amount",
 }) => {
   return (
     <ResponsiveContainer width="100%" height={380}>
@@ -21,7 +22,7 @@ const CustomPieChart = ({
 
         <Pie
           data={data}
-          dataKey="amount"
+          dataKey={dataKey}
           nameKey="name"
           cx="50%"
           cy="50%"

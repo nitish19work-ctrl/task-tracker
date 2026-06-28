@@ -80,7 +80,7 @@ const Signup = () => {
         </h3>
 
         <p className="text-xs text-slate-700 mt-[5px] mb-6">
-          Join us today by entering your details below.
+          Create an account and start organizing your tasks today.
         </p>
 
         <form onSubmit={handleSignup}>

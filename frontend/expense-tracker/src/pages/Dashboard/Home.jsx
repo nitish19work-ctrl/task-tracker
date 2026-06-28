@@ -6,122 +6,93 @@ import axiosInstance from "../../utils/axiosinstance";
 import { API_PATHS } from "../../utils/apiPaths";
 
 import InfoCard from "../../components/Cards/InfoCardComponent";
-import RecentTransactions from "../../components/Dashboard/RecentTransactions";
+import RecentTasks from "../../components/Dashboard/RecentTasks";
 
-import { LuHandCoins, LuWalletMinimal } from "react-icons/lu";
-import { IoMdCard } from "react-icons/io";
+import { LuListTodo, LuClock, LuCircleCheck } from "react-icons/lu";
+import { IoMdCheckboxOutline } from "react-icons/io";
 
-import { addThousandsSeprator } from "../../utils/helper";
-import CustomPieChart from "../../components/Charts/CustomPieChart";
-import FinanceOverview from "../../components/Dashboard/FinanceOverview";
-import ExpenseTransactions from "../../components/Dashboard/ExpenseTransactions";
-import Last30DaysExpenses from "../../components/Dashboard/Last30DaysExpenses";
-import RecentIncomeWithChart from "../../components/Dashboard/RecentIncomeWithChart";
-import RecentIncome from "../../components/Dashboard/RecentIncome";
-
+import TaskStatusOverview from "../../components/Dashboard/TaskStatusOverview";
+import UpcomingTasks from "../../components/Dashboard/UpcomingTasks";
+import TasksByPriority from "../../components/Dashboard/TasksByPriority";
 
 const Home = () => {
-
   useUserAuth();
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
 
- const fetchDashboardData = async () => {
-  try {
+  const fetchDashboardData = async () => {
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.DASHBOARD.GET_DATA
+      );
 
-    const response = await axiosInstance.get(
-      API_PATHS.DASHBOARD.GET_DATA
-    );
-
-    console.log("API DATA:", response.data);
-console.log("LAST 60 DAYS:", response.data.last60DaysIncome);
-console.log("TRANSACTIONS:", response.data.last60DaysIncome.transactions);
-
-    if (response.data) {
-      setDashboardData(response.data);
+      if (response.data) {
+        setDashboardData(response.data);
+      }
+    } catch (error) {
+      console.log("Dashboard error:", error);
     }
-
-  } catch (error) {
-    console.log("Dashboard error:", error);
-  }
-};
+  };
 
   useEffect(() => {
-
-    console.log("Home component loaded");
-
     fetchDashboardData();
-
   }, []);
 
   return (
     <DashboardLayout activeMenu="Dashboard">
-
       <div className="my-5 mx-auto">
-
-        {/* INFO CARDS */}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <InfoCard
-            icon={<IoMdCard />}
-            label="Total Balance"
-            value={addThousandsSeprator(dashboardData?.totalBalance || 0)}
+            icon={<IoMdCheckboxOutline />}
+            label="Total Tasks"
+            value={dashboardData?.totalTasks || 0}
             color="bg-purple-500"
           />
 
           <InfoCard
-            icon={<LuWalletMinimal />}
-            label="Total Income"
-            value={addThousandsSeprator(dashboardData?.totalIncome || 0)}
+            icon={<LuClock />}
+            label="Pending"
+            value={dashboardData?.pendingTasks || 0}
             color="bg-orange-500"
           />
 
           <InfoCard
-            icon={<LuHandCoins />}
-            label="Total Expense"
-            value={addThousandsSeprator(dashboardData?.totalExpense || 0)}
-            color="bg-red-500"
+            icon={<LuListTodo />}
+            label="In Progress"
+            value={dashboardData?.inProgressTasks || 0}
+            color="bg-blue-500"
           />
 
+          <InfoCard
+            icon={<LuCircleCheck />}
+            label="Completed"
+            value={dashboardData?.completedTasks || 0}
+            color="bg-green-500"
+          />
         </div>
 
-        {/* RECENT TRANSACTIONS */}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-
-         <RecentTransactions
-            transactions={dashboardData?.recentTransactions || []}
-            onSeeMore={() => navigate("/expense")}
+          <RecentTasks
+            tasks={dashboardData?.recentTasks || []}
+            onSeeMore={() => navigate("/tasks")}
           />
 
-          <FinanceOverview
-          totalBalance={dashboardData?.totalBalance || 0}
-          totalIncome={dashboardData?.totalIncome || 0}
-          totalExpense={dashboardData?.totalExpense || 0}
-          /> 
+          <TaskStatusOverview
+            pendingTasks={dashboardData?.pendingTasks || 0}
+            inProgressTasks={dashboardData?.inProgressTasks || 0}
+            completedTasks={dashboardData?.completedTasks || 0}
+          />
 
-          <ExpenseTransactions
-  transactions={dashboardData?.last30daysExpense?.transactions || []}
-  onSeeMore={() => navigate("/expense")}
-/>
+          <UpcomingTasks
+            tasks={dashboardData?.upcomingTasks || []}
+            onSeeMore={() => navigate("/tasks")}
+          />
 
-<Last30DaysExpenses
-data={dashboardData?.last30daysExpense?.transactions || []
-}
-/> 
-
-<RecentIncomeWithChart
-data={dashboardData?.last60DaysIncome?.transactions?.slice(0,4) ||[] }
-totalIncome={dashboardData?.totalIncome || 0}
-/>
-
-<RecentIncome
-transactions={dashboardData?.last60DaysIncome?.transactions || [] }
-onSeeMore={() => navigate("/income")}
-/>
-</div>
+          <TasksByPriority
+            tasksByPriority={dashboardData?.tasksByPriority || {}}
+          />
+        </div>
       </div>
     </DashboardLayout>
   );

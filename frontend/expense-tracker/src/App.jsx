@@ -9,8 +9,7 @@ import {
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Home from "./pages/Dashboard/Home";
-import Income from "./pages/Dashboard/Income";
-import Expense from "./pages/Dashboard/Expense";
+import Tasks from "./pages/Dashboard/Tasks";
 import UserProvider from "./context/UserContext";
 import { Toaster } from "react-hot-toast";
 
@@ -23,8 +22,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Home />} />
-        <Route path="/income" element={<Income />} />
-        <Route path="/expense" element={<Expense />} />
+        <Route path="/tasks" element={<Tasks />} />
       </Routes>
     </Router>
 
@@ -42,7 +40,6 @@ const App = () => {
 
 export default App;
 
-// Root Component (Redirect Logic)
 const Root = () => {
   const isAuthenticated = !!localStorage.getItem("token");
 

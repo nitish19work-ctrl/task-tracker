@@ -1,5 +1,5 @@
 {
-  "name": "expense-tracker-backend",
+  "name": "task-tracker-backend",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

@@ -10,7 +10,8 @@ import {
   Cell,
 } from "recharts";
 
-const CustomBarChart = ({ data = [] }) => {
+const CustomBarChart = ({ data = [], valueLabel = "Tasks" }) => {
+  const valueKey = data[0]?.count !== undefined ? "count" : "amount";
 
   const getBarColor = (index) => {
     return index % 2 === 0 ? "#875cf5" : "#cfbefb";
@@ -18,7 +19,7 @@ const CustomBarChart = ({ data = [] }) => {
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const label = payload[0].payload.month || payload[0].payload.category;
+      const label = payload[0].payload.month || payload[0].payload.category || payload[0].payload.name;
 
       return (
         <div className="bg-white shadow-md rounded-lg px-3 py-2 border border-gray-200">
@@ -27,9 +28,9 @@ const CustomBarChart = ({ data = [] }) => {
           </p>
 
           <p className="text-sm text-gray-600">
-            Amount:{" "}
+            {valueLabel}:{" "}
             <span className="font-semibold text-gray-900">
-              ${payload[0].payload.amount}
+              {payload[0].payload[valueKey]}
             </span>
           </p>
         </div>
@@ -38,14 +39,16 @@ const CustomBarChart = ({ data = [] }) => {
     return null;
   };
 
-  // detect which key exists
-  const xAxisKey = data[0]?.month ? "month" : "category";
+  const xAxisKey = data[0]?.month
+    ? "month"
+    : data[0]?.name
+    ? "name"
+    : "category";
 
   return (
     <div className="bg-white mt-6">
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 10, right: 20, left: -10, bottom: 5 }}>
-
           <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#e5e7eb" />
 
           <XAxis
@@ -63,12 +66,11 @@ const CustomBarChart = ({ data = [] }) => {
 
           <Tooltip content={<CustomTooltip />} />
 
-          <Bar dataKey="amount" radius={[12, 12, 0, 0]}>
+          <Bar dataKey={valueKey} radius={[12, 12, 0, 0]}>
             {data.map((entry, index) => (
               <Cell key={index} fill={getBarColor(index)} />
             ))}
           </Bar>
-
         </BarChart>
       </ResponsiveContainer>
     </div>

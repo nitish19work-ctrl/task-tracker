@@ -22,7 +22,7 @@ const Navbar = ({activeMenu}) => {
       </button>
 
       <h2 className="text-lg font-medium text-black">
-        Expense Tracker
+        Task Tracker
       </h2>
 
       {openSideMenu && (

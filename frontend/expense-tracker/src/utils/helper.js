@@ -18,47 +18,29 @@ export const getInitials = (name) => {
   return initials.toUpperCase();
 };
 
-export const addThousandsSeprator = (num) => {
-  if (num == null || isNaN(num)) return "";
-
-  const [integerPart, fractionalPart] = num.toString().split(".");
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  return fractionalPart
-    ? `${formattedInteger}.${fractionalPart}`
-    : formattedInteger;
-};
-
-// Expense Bar Chart
-export const prepareExpenseBarChartData = (data = []) => {
+export const prepareTaskBarChartData = (data = []) => {
   return data.map((item) => ({
-    category: item?.category,
-    amount: item?.amount,
+    category: item?.name,
+    count: item?.count,
   }));
 };
 
-// Income Bar Chart
-export const prepareIncomeBarChartData = (data = []) => {
+export const prepareTaskLineChartData = (data = []) => {
   const sortedData = [...data].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+    (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
   );
 
   return sortedData.map((item) => ({
-    month: moment(item?.date).format("DD MMM YYYY"),
-    amount: item?.amount,
-    source: item?.source,
+    month: moment(item?.dueDate).format("Do MMM"),
+    count: 1,
+    title: item?.title,
   }));
 };
 
-// Expense Line Chart
-export const prepareExpenseLineChartData = (data = []) => {
-  const sortedData = [...data].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
-
-  return sortedData.map((item) => ({
-    month: moment(item?.date).format("Do MMM"),
-    amount: item?.amount,
-    category: item?.category,
-  }));
+export const preparePriorityChartData = (tasksByPriority = {}) => {
+  return [
+    { name: "Low", count: tasksByPriority.low || 0 },
+    { name: "Medium", count: tasksByPriority.medium || 0 },
+    { name: "High", count: tasksByPriority.high || 0 },
+  ];
 };

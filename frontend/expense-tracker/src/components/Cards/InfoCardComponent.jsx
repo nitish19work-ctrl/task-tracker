@@ -12,7 +12,7 @@ function InfoCard({ icon, label, value, color }) {
 
       <div>
         <h6 className="text-sm text-gray-500 mb-1">{label}</h6>
-        <span className="text-[22px] font-semibold">${value}</span>
+        <span className="text-[22px] font-semibold">{value}</span>
       </div>
 
     </div>
